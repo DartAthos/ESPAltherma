@@ -11,3 +11,5 @@ contrib/ldd_decoder/obj/
 contrib/ldd_decoder/label_defines.*
 src/my_setup.h
 DaikinLogger.sln
+src/secrets.h
+
