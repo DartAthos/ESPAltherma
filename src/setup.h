@@ -81,7 +81,7 @@
 // #include "def/Altherma(ERGA D EHV-EHB-EHVZ DA series 04-08kW).h"
 // #include "def/Altherma(ERGA D EHV-EHB-EHVZ DJ series 04-08 kW).h"
 // #include "def/Altherma(ERGA E EHSH-X P30-50 E_EF series 04-08kW-ECH2O).h"
-// #include "def/Altherma(ERGA E EHV-EHB-EHVZ E_EJ series 04-08kW).h"
+#include "def/Altherma(ERGA E EHV-EHB-EHVZ E_EJ series 04-08kW).h"
 // #include "def/Altherma(ERLA D EBSH-X 16P30-50 D SERIES 11-16kW-ECH2O).h"
 // #include "def/Altherma(ERLA D EBV-EBB-EBVZ D SERIES 11-16kW).h"
 // #include "def/Altherma(ERLA03 D EHFH-EHFZ DJ series 3kW).h"
@@ -97,7 +97,7 @@
 // #include "def/Daikin Mini chiller(EWAA-EWYA D series 4-8kW).h"
 // #include "def/Daikin Mini chiller(EWAA-EWYA D series 9-16kW).h"
 // #include "def/Daikin Mini chiller(EWAQ-EWYQ B series 4-8kW).h"
-#include "def/DEFAULT.h"
+// #include "def/DEFAULT.h"
 // #include "def/EKHWET-BAV3(Multi DHW tank).h"
 
 // #include "def/PROTOCOL_S_ROTEX.h"
