@@ -1,6 +1,36 @@
 #include "labeldef.h"
 //  This file is a definition file for ESPAtherma
 //  uncomment each value you want to query for your installation.
+//
+//  CONFIGURATION FOR EHVX11S26CB9W AIR-WATER HEAT PUMP
+//  ====================================================
+//  This configuration enables basic monitoring with the following data:
+//
+//  🌡️ WATER TEMPERATURE MONITORING:
+//  - Leaving water temp. before BUH (R1T) - Water temperature leaving the heat pump
+//  - Leaving water temp. after BUH (R2T) - Water temperature after backup heater  
+//  - Refrig. Temp. liquid side (R3T) - Refrigerant liquid temperature
+//  - Inlet water temp.(R4T) - Water inlet temperature
+//  - DHW tank temp. (R5T) - Domestic hot water tank temperature
+//  - R1T-Outdoor air temp. - Outdoor air temperature
+//
+//  ⚡ POWER CONSUMPTION MONITORING:
+//  - INV primary current (A) - Inverter primary current (main power consumption)
+//  - Current measured by CT sensor L1/L2/L3 - Three-phase current monitoring
+//
+//  🌡️ THERMOSTAT & CONTROL:
+//  - Thermostat ON/OFF (main and indoor unit) - Thermostat control status
+//  - I/U operation mode - Indoor unit operation mode
+//
+//  📊 BASIC STATUS & OPERATION:
+//  - Operation Mode - Heat pump operation mode
+//  - Error type & Error Code - Fault monitoring
+//  - O/U capacity (kW) - Outdoor unit capacity
+//  - DHW setpoint & LW setpoint - Temperature setpoints
+//  - Flow sensor (l/min) - Water flow rate
+//
+//  This provides essential monitoring without overloading MQTT messages.
+//  Add/remove values as needed for your specific installation.
 
 
 LabelDef labelDefs[] = {
@@ -17,9 +47,24 @@ LabelDef labelDefs[] = {
 //{0x00,9,152,1,-1,"Connected Indoor Unit Qty"},
 //{0x00,10,152,1,-1,"O/U MPU ID (xx)"},
 //{0x00,11,152,1,-1,"O/U MPU ID (yy)"},
-//{0x00,12,105,1,-1,"O/U capacity (kW)"},
-//{0x10,0,217,1,-1,"Operation Mode"},
-//{0x10,1,307,1,-1,"Thermostat ON/OFF"},
+// ============================================================================
+// OUTDOOR UNIT CAPACITY MONITORING
+// ============================================================================
+// Register: 0x00, Offset: 12, Conversion: 105, Size: 1 byte
+// 
+// This reads the outdoor unit's nominal heating/cooling capacity in kW.
+// - Conversion 105: Single byte value * 0.1 = actual kW capacity
+// - For EHVX11S26CB9W: Should typically read around 11 kW (your model designation)
+// - This is a static configuration value, not real-time power consumption
+// - Useful for system monitoring, COP calculations, and capacity verification
+// 
+// Related capacity monitoring you might want to enable:
+// - {0x60,6,219,1,-1,"I/U capacity code"} - Indoor unit capacity code
+// - {0x63,13,311,1,-1,"BUH output capacity"} - Backup heater capacity
+// ============================================================================
+{0x00,12,105,1,-1,"O/U capacity (kW)"},
+{0x10,0,217,1,-1,"Operation Mode"},
+{0x10,1,307,1,-1,"Thermostat ON/OFF"},
 //{0x10,1,306,1,-1,"Restart standby"},
 //{0x10,1,305,1,-1,"Startup Control"},
 //{0x10,1,304,1,-1,"Defrost Operation"},
@@ -27,8 +72,8 @@ LabelDef labelDefs[] = {
 //{0x10,1,302,1,-1,"Pressure equalizing operation"},
 //{0x10,1,301,1,-1,"Demand Signal"},
 //{0x10,1,300,1,-1,"Low noise control"},
-//{0x10,4,203,1,-1,"Error type"},
-//{0x10,5,204,1,-1,"Error Code"},
+{0x10,4,203,1,-1,"Error type"},
+{0x10,5,204,1,-1,"Error Code"},
 //{0x10,6,114,2,1,"Target Evap. Temp."},
 //{0x10,8,114,2,1,"Target Cond. Temp."},
 //{0x10,10,307,1,-1,"Discharge Temp. Drop"},
@@ -50,7 +95,7 @@ LabelDef labelDefs[] = {
 //{0x11,4,215,1,-1,"O/U EEPROM (10th digit)"},
 //{0x11,5,214,1,-1,"O/U EEPROM (11th digit)"},
 //{0x00,0,995,1,-1,"NextDataGrid"},
-//{0x20,0,105,2,1,"R1T-Outdoor air temp."},
+{0x20,0,105,2,1,"R1T-Outdoor air temp."},
 //{0x20,2,105,2,1,"O/U Heat Exch. Temp."},
 //{0x20,4,105,2,1,"Discharge pipe temp."},
 //{0x20,6,105,2,1,"Suction pipe temp."},
@@ -60,7 +105,7 @@ LabelDef labelDefs[] = {
 //{0x20,12,405,2,1,"High Pressure(T)"},
 //{0x20,14,105,2,2,"Low Pressure"},
 //{0x20,14,405,2,1,"Low Pressure(T)"},
-//{0x21,0,105,2,-1,"INV primary current (A)"},
+{0x21,0,105,2,-1,"INV primary current (A)"},
 //{0x21,2,105,2,-1,"INV secondary current (A)"},
 //{0x21,4,105,2,1,"INV fin temp."},
 //{0x21,6,105,2,1,"Fan1 Fin temp."},
@@ -115,8 +160,8 @@ LabelDef labelDefs[] = {
 //{0xA1,9,300,1,-1,"Alterma LT setting"},
 //{0x60,0,304,1,-1,"Data Enable/Disable"},
 //{0x60,1,152,1,-1,"Indoor Unit Address"},
-//{0x60,2,315,1,-1,"I/U operation mode"},
-//{0x60,2,303,1,-1,"Thermostat ON/OFF"},
+{0x60,2,315,1,-1,"I/U operation mode"},
+{0x60,2,303,1,-1,"Thermostat ON/OFF"},
 //{0x60,2,302,1,-1,"Freeze Protection"},
 //{0x60,2,301,1,-1,"Silent Mode"},
 //{0x60,2,300,1,-1,"Freeze Protection for water piping"},
@@ -124,8 +169,8 @@ LabelDef labelDefs[] = {
 //{0x60,4,152,1,-1,"Error detailed code"},
 //{0x60,5,203,1,-1,"Error type"},
 //{0x60,6,219,1,-1,"I/U capacity code"},
-//{0x60,7,105,2,1,"DHW setpoint"},
-//{0x60,9,105,2,1,"LW setpoint (main)"},
+{0x60,7,105,2,1,"DHW setpoint"},
+{0x60,9,105,2,1,"LW setpoint (main)"},
 //{0x60,11,307,1,-1,"Water flow switch"},
 //{0x60,11,306,1,-1,"Thermal protector (Q1L) BUH"},
 //{0x60,11,305,1,-1,"Thermal protector BSH"},
@@ -148,11 +193,11 @@ LabelDef labelDefs[] = {
 //{0x60,16,152,1,-1,"I/U EEPROM Ver."},
 //{0x61,0,307,1,-1,"Data Enable/Disable"},
 //{0x61,1,152,1,-1,"Indoor Unit Address"},
-//{0x61,2,105,2,1,"Leaving water temp. before BUH (R1T)"},
-//{0x61,4,105,2,1,"Leaving water temp. after BUH (R2T)"},
-//{0x61,6,105,2,1,"Refrig. Temp. liquid side (R3T)"},
-//{0x61,8,105,2,1,"Inlet water temp.(R4T)"},
-//{0x61,10,105,2,1,"DHW tank temp. (R5T)"},
+{0x61,2,105,2,1,"Leaving water temp. before BUH (R1T)"},
+{0x61,4,105,2,1,"Leaving water temp. after BUH (R2T)"},
+{0x61,6,105,2,1,"Refrig. Temp. liquid side (R3T)"},
+{0x61,8,105,2,1,"Inlet water temp.(R4T)"},
+{0x61,10,105,2,1,"DHW tank temp. (R5T)"},
 //{0x61,12,105,2,1,"Indoor ambient temp. (R1T)"},
 //{0x61,14,105,2,1,"Ext. indoor ambient sensor (R6T)"},
 //{0x62,0,307,1,-1,"Data Enable/Disable"},
@@ -183,7 +228,7 @@ LabelDef labelDefs[] = {
 //{0x62,8,302,1,-1,"Circulation pump operation"},
 //{0x62,8,301,1,-1,"Alarm output"},
 //{0x62,8,300,1,-1,"Space H Operation output"},
-//{0x62,9,105,2,-1,"Flow sensor (l/min)"},
+{0x62,9,105,2,-1,"Flow sensor (l/min)"},
 //{0x62,11,405,1,1,"Water pressure"},
 //{0x62,12,152,1,-1,"Water pump signal (0:max-100:stop)"},
 //{0x62,13,152,1,-1,"[Future] 3 way Valve Mixing 1"},
@@ -204,10 +249,10 @@ LabelDef labelDefs[] = {
 //{0x63,12,301,1,-1,"[RT space thermo ON/OFF] (bit1)"},
 //{0x63,12,300,1,-1,"[RT space thermo ON/OFF] (bit0)"},
 //{0x63,13,311,1,-1,"BUH output capacity"},
-//{0x63,14,161,1,-1,"Current measured by CT sensor of L1"},
-//{0x63,15,161,1,-1,"Current measured by CT sensor of L2"},
+{0x63,14,161,1,-1,"Current measured by CT sensor of L1"},
+{0x63,15,161,1,-1,"Current measured by CT sensor of L2"},
 //{0x63,16,307,1,-1,"HP Forced FG"},
-//{0x63,16,161,1,-1,"Current measured by CT sensor of L3"},
+{0x63,16,161,1,-1,"Current measured by CT sensor of L3"},
 //{0x64,0,307,1,-1,"Data Enable/Disable"},
 //{0x64,1,152,1,-1,"Indoor Unit Address"},
 //{0x64,2,316,1,-1,"Hybrid Op. Mode"},
