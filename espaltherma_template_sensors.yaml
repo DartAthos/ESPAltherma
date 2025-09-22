@@ -1,0 +1,117 @@
+# ESPAltherma Template Sensors Configuration
+# =================================================================
+# Include this file in your main configuration.yaml with:
+# template: !include espaltherma_template_sensors.yaml
+#
+# These sensors calculate derived values from the MQTT sensors
+
+# =================================================================
+# TEMPLATE SENSORS FOR CALCULATIONS
+# =================================================================
+- sensor:
+    - name: "Heat Pump Total Power"
+      unique_id: "hp_total_power"
+      unit_of_measurement: "W"
+      device_class: "power"
+      state_class: "measurement"
+      state: >
+        {% set voltage = 230 %}
+        {% set power_factor = 0.9 %}
+        {% set current = states('sensor.heat_pump_inv_primary_current') | float(0) %}
+        {{ (current * voltage * power_factor) | round(0) }}
+      availability: >
+        {{ states('sensor.heat_pump_inv_primary_current') not in ['unknown', 'unavailable'] }}
+
+    - name: "Heat Pump Delta T"
+      unique_id: "hp_delta_t"
+      unit_of_measurement: "°C"
+      device_class: "temperature"
+      state_class: "measurement"
+      state: >
+        {% set leaving = states('sensor.heat_pump_water_leaving_temperature_after_buh') | float %}
+        {% set inlet = states('sensor.heat_pump_water_inlet_temperature') | float %}
+        {{ (leaving - inlet) | round(1) }}
+      availability: >
+        {{ states('sensor.heat_pump_water_leaving_temperature_after_buh') not in ['unknown', 'unavailable'] and
+           states('sensor.heat_pump_water_inlet_temperature') not in ['unknown', 'unavailable'] }}
+
+    - name: "Heat Pump Thermal Power"
+      unique_id: "hp_thermal_power"
+      unit_of_measurement: "kW"
+      device_class: "power"
+      state_class: "measurement"
+      state: >
+        {% set flow = states('sensor.heat_pump_flow_rate') | float(0) %}
+        {% set delta_t = states('sensor.heat_pump_delta_t') | float(0) %}
+        {% set thermal_power = (flow * delta_t * 4.18 / 60) %}
+        {{ thermal_power | round(1) if thermal_power > 0 else 0 }}
+      availability: >
+        {{ states('sensor.heat_pump_flow_rate') not in ['unknown', 'unavailable'] and
+           states('sensor.heat_pump_delta_t') not in ['unknown', 'unavailable'] }}
+
+    - name: "Heat Pump COP"
+      unique_id: "hp_cop"
+      state_class: "measurement"
+      state: >
+        {% set thermal = states('sensor.heat_pump_thermal_power') | float(0) %}
+        {% set electrical = states('sensor.heat_pump_total_power') | float(0) / 1000 %}
+        {% if electrical > 0.1 and thermal > 0.1 %}
+          {{ (thermal / electrical) | round(2) }}
+        {% else %}
+          {{ 0 }}
+        {% endif %}
+      availability: >
+        {{ states('sensor.heat_pump_thermal_power') not in ['unknown', 'unavailable'] and
+           states('sensor.heat_pump_total_power') not in ['unknown', 'unavailable'] }}
+
+    - name: "Heat Pump DHW Status"
+      unique_id: "hp_dhw_status"
+      state: >
+        {% set dhw_temp = states('sensor.heat_pump_dhw_tank_temperature') | float %}
+        {% set dhw_setpoint = states('sensor.heat_pump_dhw_setpoint') | float %}
+        {% if dhw_temp < (dhw_setpoint - 5) %}
+          Heating Required
+        {% elif dhw_temp > dhw_setpoint %}
+          At Temperature
+        {% else %}
+          Maintaining
+        {% endif %}
+      availability: >
+        {{ states('sensor.heat_pump_dhw_tank_temperature') not in ['unknown', 'unavailable'] and
+           states('sensor.heat_pump_dhw_setpoint') not in ['unknown', 'unavailable'] }}
+
+    - name: "Heat Pump Energy Today"
+      unique_id: "hp_energy_today"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      state: >-
+        {% set power_w = states('sensor.heat_pump_total_power') | float(0) %}
+        {% set power_kw = power_w / 1000 %}
+        {% set last_reset = now().replace(hour=0, minute=0, second=0, microsecond=0) %}
+        {% set current_time = now() %}
+        {% set hours_since_reset = ((current_time - last_reset).total_seconds() / 3600) %}
+        {% if power_kw > 0 and hours_since_reset > 0 %}
+          {{ (power_kw * hours_since_reset) | round(3) }}
+        {% else %}
+          0
+        {% endif %}
+      availability: "{{ states('sensor.heat_pump_total_power') not in ['unknown', 'unavailable'] }}"
+
+    - name: "Heat Pump Energy This Month"
+      unique_id: "hp_energy_month"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      state: >-
+        {% set power_w = states('sensor.heat_pump_total_power') | float(0) %}
+        {% set power_kw = power_w / 1000 %}
+        {% set first_of_month = now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) %}
+        {% set current_time = now() %}
+        {% set hours_since_reset = ((current_time - first_of_month).total_seconds() / 3600) %}
+        {% if power_kw > 0 and hours_since_reset > 0 %}
+          {{ (power_kw * hours_since_reset) | round(3) }}
+        {% else %}
+          0
+        {% endif %}
+      availability: "{{ states('sensor.heat_pump_total_power') not in ['unknown', 'unavailable'] }}"
