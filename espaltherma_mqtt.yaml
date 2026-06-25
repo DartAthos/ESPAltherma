@@ -260,7 +260,9 @@ sensor:
     availability_topic: "espaltherma/LWT"
     payload_available: "Online"
     payload_not_available: "Offline"
-    value_template: "{{ value_json['3way valve(On:DHW_Off:Space)'] }}"
+    value_template: >
+      {% set val = value_json['3way valve(On:DHW_Off:Space)'] %}
+      {{ 'Eau Chaude (ECS)' if val == 'ON' else 'Plancher' }}
     icon: "mdi:valve"
 
   - name: "Heat Pump Circulating Pump"
