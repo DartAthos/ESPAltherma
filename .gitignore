@@ -13,3 +13,4 @@ src/my_setup.h
 DaikinLogger.sln
 src/secrets.h
 
+venv/
