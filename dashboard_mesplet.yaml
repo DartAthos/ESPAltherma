@@ -597,11 +597,11 @@ views:
                 entity: sensor.hermes_cost_total
                 name: Cumulé Total
           - type: statistics-graph
-            title: Consommation horaire LLM (LTS)
+            title: Consommation journalière LLM (7 jours)
             entities:
               - sensor.hermes_cost_total
             stat_types:
               - change
             chart_type: bar
-            period: hour
-            days_to_show: 2
+            period: day
+            days_to_show: 7
