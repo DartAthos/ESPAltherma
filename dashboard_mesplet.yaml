@@ -185,9 +185,9 @@ views:
       - title: ❄️ PAC & Énergie (Daikin)
         type: grid
         cards:
-          # --- 0. THERMOSTATS D'AMBIANCE VIRTUELS ---
+          # --- 0. THERMOSTATS D'AMBIANCE VIRTUELS & COMMANDES ---
           - type: grid
-            title: 🌡️ Régulation d'Ambiance (Virtuelle)
+            title: 🌡️ Régulation d'Ambiance & Interrupteurs
             columns: 2
             square: false
             cards:
@@ -197,23 +197,6 @@ views:
               - type: thermostat
                 entity: climate.rafraichissement_dalle_mesplet
                 name: Thermostat Froid
-
-          # --- 1. BLOC COMMANDES (Grille 2x3 ultra-symmetrical) ---
-          - type: grid
-            title: 🕹️ Contrôles, Aiguillage & Modes
-            columns: 2
-            square: false
-            cards:
-              - type: tile
-                entity: sensor.heat_pump_operation_mode
-                name: Mode Actuel
-                color: light-blue
-                icon: mdi:heat-pump
-              - type: tile
-                entity: select.buanderie_daikin_altherma_espaltherma_smart_grid
-                name: Mode SG Ready
-                color: amber
-                icon: mdi:solar-power
               - type: tile
                 entity: switch.heat_pump_thermostat
                 name: Thermostat (Chaud)
@@ -228,6 +211,23 @@ views:
                 icon: mdi:snowflake
                 tap_action:
                   action: toggle
+
+          # --- 1. ÉTATS & MODES (Grille 2x2 ultra-symmetrical) ---
+          - type: grid
+            title: 🕹️ Modes Globaux & Aiguillage
+            columns: 2
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.heat_pump_operation_mode
+                name: Mode Actuel
+                color: light-blue
+                icon: mdi:heat-pump
+              - type: tile
+                entity: select.buanderie_daikin_altherma_espaltherma_smart_grid
+                name: Mode SG Ready
+                color: amber
+                icon: mdi:solar-power
               - type: tile
                 entity: sensor.heat_pump_3_way_valve
                 name: Aiguillage Vanne 3V
