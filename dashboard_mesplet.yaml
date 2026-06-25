@@ -572,3 +572,36 @@ views:
               - entity: sensor.bbox_donnees_envoyees
                 name: Total Envoyé (octets)
                 icon: mdi:upload-network
+
+
+      # =======================================================================
+      # SECTION 9 : INTÉLLIGENCE ARTIFICIELLE (LLM)
+      # =======================================================================
+      - title: 🧠 Intelligence Artificielle (LLM)
+        type: grid
+        cards:
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: sensor
+                entity: sensor.hermes_cost_today
+                name: Aujourd'hui
+              - type: sensor
+                entity: sensor.hermes_cost_this_month
+                name: Ce Mois
+              - type: sensor
+                entity: sensor.hermes_cost_this_year
+                name: Cette Année
+              - type: sensor
+                entity: sensor.hermes_cost_total
+                name: Cumulé Total
+          - type: statistics-graph
+            title: Consommation horaire LLM (LTS)
+            entities:
+              - sensor.hermes_cost_total
+            stat_types:
+              - change
+            chart_type: bar
+            period: hour
+            days_to_show: 2
