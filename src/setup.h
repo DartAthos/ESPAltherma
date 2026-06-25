@@ -16,10 +16,13 @@
 #define PIN_THERM 0                 // Pin connected to the thermostat relay (normally open)
 #define PIN_THERM_ACTIVE_STATE HIGH // State to trigger the thermostat relay
 
+#define PIN_COOL 4                 // Pin connected to the cooling thermostat relay (normally open) (GPIO 4)
+#define PIN_COOL_ACTIVE_STATE HIGH // State to trigger the cooling thermostat relay
+
 // Smart grid control - Optional:
 // Uncomment and set to enable SG mqtt functions
-// #define PIN_SG1 32// Pin connected to dry contact SG 1 relay (normally open)
-// #define PIN_SG2 33// Pin connected to dry contact SG 2 relay (normally open)
+#define PIN_SG1 32// Pin connected to dry contact SG 1 relay (normally open) (GPIO 32)
+#define PIN_SG2 33// Pin connected to dry contact SG 2 relay (normally open) (GPIO 33)
 //  Define if your SG relay board is Low or High triggered (signal pins)
 //  Only uncomment one of them
 #define SG_RELAY_HIGH_TRIGGER

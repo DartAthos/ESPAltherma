@@ -96,6 +96,13 @@ void reconnectMqtt()
       client.publish("espaltherma/sg/state", "0");
 #endif
 
+#ifdef PIN_COOL
+      // Cooling Switch
+      client.publish("homeassistant/switch/espAlthermaCool/config", "{\"name\":\"Altherma Cool\",\"cmd_t\":\"~/COOLING\",\"stat_t\":\"~/COOL_STATE\",\"pl_off\":\"OFF\",\"pl_on\":\"ON\",\"~\":\"espaltherma\",\"uniq_id\":\"espaltherma_cool\"}", true);
+      client.subscribe("espaltherma/COOLING");
+      client.publish("espaltherma/COOL_STATE", "OFF", true);
+#endif
+
 #ifdef SAFETY_RELAY_PIN
       // Safety relay
       client.publish("homeassistant/switch/espAltherma/safety/config", "{\"name\":\"Altherma Safety\",\"cmd_t\":\"~/SAFETY\",\"stat_t\":\"~/SAFETY_STATE\",\"pl_off\":\"0\",\"pl_on\":\"1\",\"~\":\"espaltherma\"}", true);
@@ -155,6 +162,25 @@ void callbackTherm(byte *payload, unsigned int length)
     Serial.printf("Unknown message: %s\n", payload);
   }
 }
+
+#ifdef PIN_COOL
+void callbackCool(byte *payload, unsigned int length)
+{
+  payload[length] = '\0';
+  if (payload[1] == 'F')
+  { // turn off
+    digitalWrite(PIN_COOL, !PIN_COOL_ACTIVE_STATE);
+    client.publish("espaltherma/COOL_STATE", "OFF", true);
+    mqttSerial.println("Cooling turned OFF");
+  }
+  else if (payload[1] == 'N')
+  { // turn on
+    digitalWrite(PIN_COOL, PIN_COOL_ACTIVE_STATE);
+    client.publish("espaltherma/COOL_STATE", "ON", true);
+    mqttSerial.println("Cooling turned ON");
+  }
+}
+#endif
 
 #ifdef PIN_SG1
 //Smartgrid callbacks
@@ -234,6 +260,12 @@ void callback(char *topic, byte *payload, unsigned int length)
   {
     callbackTherm(payload, length);
   }
+#ifdef PIN_COOL
+  else if (strcmp(topic, "espaltherma/COOLING") == 0)
+  {
+    callbackCool(payload, length);
+  }
+#endif
 #ifdef PIN_SG1
   else if (strcmp(topic, "espaltherma/sg/set") == 0)
   {
