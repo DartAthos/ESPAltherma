@@ -1,607 +1,549 @@
-# -----------------------------------------------------------------------------
-# Home Assistant - Dashboard Épuré & Optimisé "Maison Mesplet" (v19)
-# -----------------------------------------------------------------------------
-
 title: Maison Mesplet
 views:
-  - title: Accueil
-    path: accueil
-    type: sections
-    max_columns: 4
-    sections:
-
-      # =======================================================================
-      # SECTION 1 : CLIMAT ET GRAPHIQUES COMPACTS 7 JOURS
-      # =======================================================================
-      - title: 🌦️ Météo & Comparatifs (7 jours)
-        type: grid
-        cards:
-          - type: weather-forecast
-            entity: weather.forecast_home
-            name: Clermont-Savès
-            show_forecast: true
-
-          # Graphique comparatif global de toutes les températures sur 7 jours (168h)
-          - type: history-graph
-            title: Comparatif Températures (7 jours)
-            entities:
-              - entity: sensor.sensor_6_temperature
-                name: Extérieur (Tapo)
-              - entity: sensor.heat_pump_outdoor_temperature
-                name: Extérieur Sonde PAC
-              - entity: sensor.meteo_temperature
-                name: Extérieur Météo
-              - entity: sensor.capteur_temp_hum_salon_temperature
-                name: Salon
-              - entity: sensor.sensor_2_temperature
-                name: Bureau
-              - entity: sensor.temperature_humidity_sensor_temperature
-                name: Ch. Parentale
-              - entity: sensor.temperature_humidity_sensor_temperature_3
-                name: Ch. Blanche
-              - entity: sensor.temperature_humidity_sensor_temperature_2
-                name: Ch. Verte
-              - entity: sensor.temperature_humidity_sensor_temperature_4
-                name: Cave
-            hours_to_show: 168
-
-          # Graphique comparatif global de toutes les humidités sur 7 jours (168h)
-          - type: history-graph
-            title: Comparatif Humidités (7 jours)
-            entities:
-              - entity: sensor.sensor_6_humidite
-                name: Extérieur (Tapo)
-              - entity: sensor.capteur_temp_hum_salon_humidite
-                name: Salon
-              - entity: sensor.sensor_2_humidite
-                name: Bureau
-              - entity: sensor.temperature_humidity_sensor_humidite
-                name: Ch. Parentale
-              - entity: sensor.temperature_humidity_sensor_humidite_3
-                name: Ch. Blanche
-              - entity: sensor.temperature_humidity_sensor_humidite_2
-                name: Ch. Verte
-              - entity: sensor.temperature_humidity_sensor_humidite_4
-                name: Cave
-            hours_to_show: 168
-
-      # =======================================================================
-      # SECTION 2 : CLIMAT INTÉRIEUR (DOUBLE GRAPHES 24H)
-      # =======================================================================
-      - title: 🌡️ Climat Intérieur (24h)
-        type: grid
-        cards:
-          # Salon
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.capteur_temp_hum_salon_temperature
-                name: Salon Température
-                graph: line
-                detail: 1
-                color: orange
-              - type: sensor
-                entity: sensor.capteur_temp_hum_salon_humidite
-                name: Salon Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-          # Bureau
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.sensor_2_temperature
-                name: Bureau Température
-                graph: line
-                detail: 1
-                color: orange
-              - type: sensor
-                entity: sensor.sensor_2_humidite
-                name: Bureau Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-          # Chambre Parentale
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_temperature
-                name: Parentale Température
-                graph: line
-                detail: 1
-                color: orange
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_humidite
-                name: Parentale Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-          # Chambre Blanche
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_temperature_3
-                name: Blanche Température
-                graph: line
-                detail: 1
-                color: orange
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_humidite_3
-                name: Blanche Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-          # Chambre Verte
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_temperature_2
-                name: Verte Température
-                graph: line
-                detail: 1
-                color: orange
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_humidite_2
-                name: Verte Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-          # Cave
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_temperature_4
-                name: Cave Température
-                graph: line
-                detail: 1
-                color: grey
-              - type: sensor
-                entity: sensor.temperature_humidity_sensor_humidite_4
-                name: Cave Humidité
-                graph: line
-                detail: 1
-                color: blue
-
-      # =======================================================================
-      # SECTION 3 : POMPE À CHALEUR (DAIKIN ALTHERMA 2) - THERMODYNAMIQUE & PERFORMANCE
-      # =======================================================================
-      - title: ❄️ PAC & Énergie (Daikin)
-        type: grid
-        cards:
-          # --- 0. THERMOSTATS D'AMBIANCE VIRTUELS & COMMANDES ---
-          - type: grid
-            title: 🌡️ Régulation d'Ambiance & Interrupteurs
-            columns: 2
-            square: false
-            cards:
-              - type: thermostat
-                entity: climate.chauffage_dalle_mesplet
-                name: Thermostat Chaud
-              - type: thermostat
-                entity: climate.rafraichissement_dalle_mesplet
-                name: Thermostat Froid
-              - type: tile
-                entity: switch.heat_pump_thermostat
-                name: Thermostat (Chaud)
-                color: red
-                icon: mdi:heating-coil
-                tap_action:
-                  action: toggle
-              - type: tile
-                entity: switch.altherma_cool
-                name: Rafraîchissement (Froid)
-                color: blue
-                icon: mdi:snowflake
-                tap_action:
-                  action: toggle
-
-          # --- 1. ÉTATS & MODES (Grille 2x2 ultra-symmetrical) ---
-          - type: grid
-            title: 🕹️ Modes Globaux & Aiguillage
-            columns: 2
-            square: false
-            cards:
-              - type: tile
-                entity: sensor.heat_pump_operation_mode
-                name: Mode Actuel
-                color: light-blue
-                icon: mdi:heat-pump
-              - type: tile
-                entity: select.buanderie_daikin_altherma_espaltherma_smart_grid
-                name: Mode SG Ready
-                color: amber
-                icon: mdi:solar-power
-              - type: tile
-                entity: sensor.heat_pump_3_way_valve
-                name: Aiguillage Vanne 3V
-                color: green
-                icon: mdi:valve
-              - type: tile
-                entity: sensor.heat_pump_dhw_status
-                name: Statut Ballon ECS
-                color: orange
-                icon: mdi:water-boiler-alert
-
-          # --- 2. BLOC PUISSANCE, COP & ECS (Triple graphes 24h d'Énergie) ---
-          - type: grid
-            title: ⚡ Rendement & Stockage Thermique (24h)
-            columns: 3
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.heat_pump_total_power
-                name: Puissance Élec.
-                graph: line
-                detail: 1
-                color: red
-              - type: sensor
-                entity: sensor.heat_pump_cop
-                name: COP instantané
-                graph: line
-                detail: 1
-                color: green
-              - type: sensor
-                entity: sensor.heat_pump_dhw_tank_temperature
-                name: Temp. Ballon ECS
-                graph: line
-                detail: 1
-                color: orange
-
-          # --- 3. BLOC HYDRAULIQUE ET THERMIQUE (Graphe unique large pour lisibilité maximale des courbes) ---
-          - type: history-graph
-            title: 🚰 Boucle Thermique Départ/Retour (24h)
-            entities:
-              - entity: sensor.heat_pump_water_leaving_temperature_after_buh
-                name: Eau Départ (Sortie)
-              - entity: sensor.heat_pump_water_inlet_temperature
-                name: Eau Retour (Entrée)
-              - entity: sensor.heat_pump_lw_setpoint
-                name: Consigne (LW)
-            hours_to_show: 24
-
-          # --- 4. FLUX HYDRAULIQUE (EAU) ---
-          - type: entities
-            title: 💧 Circuit Hydraulique (Eau)
-            show_header_toggle: false
-            entities:
-              - entity: sensor.heat_pump_circulating_pump
-                name: Circulateur d'eau
-                icon: mdi:pump
-              - entity: sensor.heat_pump_flow_rate
-                name: Débit Hydraulique
-                icon: mdi:waves
-              - entity: sensor.heat_pump_lw_setpoint
-                name: Consigne d'Eau (Loi d'eau)
-                icon: mdi:thermometer-water
-
-          # --- 5. COMPRESSEUR & CONSIGNE ECS ---
-          - type: entities
-            title: ⚡ Groupe Extérieur & Consignes
-            show_header_toggle: false
-            entities:
-              - entity: sensor.heat_pump_compressor_frequency
-                name: Modulation Compresseur
-                icon: mdi:sine-wave
-              - entity: sensor.heat_pump_inv_primary_current
-                name: Intensité Primaire Inverter
-                icon: mdi:flash
-              - entity: sensor.heat_pump_dhw_setpoint
-                name: Consigne Ballon ECS
-                icon: mdi:water-boiler
-              - entity: sensor.heat_pump_energy
-                name: Index Énergie Total
-                icon: mdi:counter
-
-      # =======================================================================
-      # SECTION 4 : EXTERIEURS, GARAGE & GRANGE (CONSOLIDÉS)
-      # =======================================================================
-      - title: 🚗 Garage, Grange & Extérieurs
-        type: grid
-        cards:
-          # --- UNION INTEGREE DU GARAGE AVEC BOUTON IMPULSIONEL DEDIE ---
-          - type: entities
-            title: 🚗 Contrôle & État Garage
-            show_header_toggle: false
-            entities:
-              - entity: binary_sensor.konyks_senso_charge_2_porte
-                name: Position de la Porte
-                icon: mdi:garage
-              # Remplacement du toggle (slider) par un vrai bouton de commande impulsionnel
-              - type: button
-                name: Commande de la Porte
-                icon: mdi:remote
-                action_name: Actionner
-                tap_action:
-                  action: call-service
-                  service: switch.turn_on
-                  target:
-                    entity_id: switch.relai_garage_switch_1
-              - entity: switch.relai_garage_switch_2
-                name: Éclairage du Garage
-                icon: mdi:lightbulb
-              - entity: sensor.konyks_senso_charge_2_batterie
-                name: Niveau de Batterie Capteur
-                icon: mdi:battery-60
-
-          # --- ACTIONS GRANGE & EXTERIEURS (Taps directs configurés) ---
-          - type: grid
-            title: ⚡ Actions Grange & Extérieur
-            columns: 2
-            square: false
-            cards:
-              - type: tile
-                entity: switch.aubess_smart_switch_1_gang_6_switch_1
-                name: Extérieur Maison
-                color: yellow
-                icon: mdi:outdoor-lamp
-                tap_action:
-                  action: toggle
-              - type: tile
-                entity: switch.lumiere_grange_switch_1
-                name: Lumière Grange
-                color: yellow
-                icon: mdi:lightbulb
-                tap_action:
-                  action: toggle
-
-              - type: tile
-                entity: switch.grange_lumiere_bar_switch_1
-                name: Bar Grange
-                color: yellow
-                icon: mdi:led-strip-variant
-                tap_action:
-                  action: toggle
-              - type: tile
-                entity: switch.prise_commandee_grange_switch_1
-                name: Prise Grange
-                color: yellow
-                icon: mdi:power-socket-eu
-                tap_action:
-                  action: toggle
-
-      # =======================================================================
-      # SECTION 5 : BUREAU & ÉQUIPEMENTS INTÉRIEURS
-      # =======================================================================
-      - title: 🏠 Bureau & Équipements Intérieurs
-        type: grid
-        cards:
-          - type: grid
-            title: ⚡ Actions Bureau (Taps directs configurés)
-            columns: 2
-            square: false
-            cards:
-              - type: tile
-                entity: fan.ventilateur_bureau
-                name: Ventilo Bureau
-                color: cyan
-                icon: mdi:fan
-                features:
-                  - type: fan-speed
-                tap_action:
-                  action: toggle
-              - type: tile
-                entity: light.ventilateur_bureau
-                name: Lumière Ventilo
-                color: yellow
-                icon: mdi:lightbulb-outline
-                tap_action:
-                  action: toggle
-
-      # =======================================================================
-      # SECTION 6 : ROBOROCK (CORRECTION DE LA CARTE DE DEBUg IMAGE)
-      # =======================================================================
-      - title: 🧹 Aspirateur Robot
-        type: grid
-        cards:
-          - type: tile
-            entity: vacuum.roborock_qrevo_s
-            name: Roborock Qrevo S
-            color: deep-purple
-            icon: mdi:robot-vacuum
-            features:
-              - type: vacuum-commands
-                commands:
-                  - start_pause
-                  - clean_spot
-                  - return_home
-
-          - type: entities
-            title: État & Infos de Nettoyage
-            show_header_toggle: false
-            entities:
-              - entity: sensor.roborock_qrevo_s_etat
-                name: État actuel
-              - entity: sensor.roborock_qrevo_s_batterie
-                name: Batterie Robot
-                icon: mdi:battery
-              - entity: sensor.roborock_qrevo_s_current_room
-                name: Pièce actuelle
-                icon: mdi:room-service
-              - entity: sensor.roborock_qrevo_s_surface_de_nettoyage
-                name: Surface nettoyée
-                icon: mdi:texture-box
-              - entity: sensor.roborock_qrevo_s_duree_de_nettoyage
-                name: Durée de nettoyage
-                icon: mdi:timer-outline
-
-          # CORRECTION DU BUG : Utilisation de picture-entity à la place d'une carte image invalide
-          - type: picture-entity
-            entity: image.roborock_qrevo_s_mesplet
-            name: Carte Mesplet
-            show_name: false
-            show_state: false
-
-      # =======================================================================
-      # SECTION 7 : MULTIMÉDIA SALON
-      # =======================================================================
-      - title: 🎵 Multimédia Salon
-        type: grid
-        cards:
-          - type: tile
-            entity: switch.harman_kardon_hk970_ampli_salon_power
-            name: Ampli Harman Kardon HK970
-            color: red
-            icon: mdi:amplifier
-            tap_action:
-              action: toggle
-
-          - type: grid
-            columns: 3
-            square: false
-            cards:
-              - type: tile
-                entity: button.harman_kardon_hk970_ampli_volume
-                name: Volume +
-                icon: mdi:volume-plus
-                tap_action:
-                  action: call-service
-                  service: button.press
-                  target:
-                    entity_id: button.harman_kardon_hk970_ampli_volume
-              - type: tile
-                entity: button.harman_kardon_hk970_ampli_volume_2
-                name: Volume -
-                icon: mdi:volume-minus
-                tap_action:
-                  action: call-service
-                  service: button.press
-                  target:
-                    entity_id: button.harman_kardon_hk970_ampli_volume_2
-              - type: tile
-                entity: button.harman_kardon_hk970_ampli_source_tv
-                name: Source TV
-                icon: mdi:television
-                tap_action:
-                  action: call-service
-                  service: button.press
-                  target:
-                    entity_id: button.harman_kardon_hk970_ampli_source_tv
-
-          # HOMOGENEISATION : WiiM, Télévision et décodeur Bbox au même format média
-          - type: media-control
-            entity: media_player.wiim_ultra_31ba_2
-            name: WiiM Ultra Salon
-
-          - type: media-control
-            entity: media_player.tv_2
-            name: Télévision Salon
-
-          - type: media-control
-            entity: media_player.bouygtel4k_2
-            name: Décodeur Bbox
-
-      # =======================================================================
-      # SECTION 8 : INTERNET & RÉSEAU (AVEC APPAREILS CONNECTÉS)
-      # =======================================================================
-      - title: 🌐 Internet & Réseau
-        type: grid
-        cards:
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: tile
-                entity: sensor.bbox_etat_du_reseau_etendu_wan
-                name: État Réseau Bbox
-                color: green
-                icon: mdi:router-wireless
-              - type: tile
-                entity: sensor.bbox_ip_externe
-                name: IP Publique
-                icon: mdi:ip-network
-                color: blue
-
-          # --- SUIVI DE PRESENCE DES APPAREILS SUR LE RESEAU ---
-          - type: entities
-            title: 💻 Appareils Actifs (Wi-Fi / LAN)
-            show_header_toggle: false
-            entities:
-              - entity: device_tracker.xmgbook
-                name: Ordinateur Charles
-                icon: mdi:laptop
-              - entity: device_tracker.cph2709_oneplus_nord5
-                name: Téléphone Charles
-                icon: mdi:cellphone
-              - entity: device_tracker.dn2103_elvire
-                name: Téléphone Elvire
-                icon: mdi:cellphone
-
-          # Graphiques de débit
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.bbox_vitesse_de_telechargement
-                name: Débit Descendant
-                graph: line
-                detail: 1
-                color: purple
-              - type: sensor
-                entity: sensor.bbox_vitesse_de_telechargement_montant
-                name: Débit Montant
-                graph: line
-                detail: 1
-                color: deep-orange
-
-          # Consommation de données
-          - type: entities
-            title: Consommation Globale Bbox
-            show_header_toggle: false
-            entities:
-              - entity: sensor.bbox_donnees_recues
-                name: Total Reçu (octets)
-                icon: mdi:download-network
-              - entity: sensor.bbox_donnees_envoyees
-                name: Total Envoyé (octets)
-                icon: mdi:upload-network
-
-
-      # =======================================================================
-      # SECTION 9 : INTÉLLIGENCE ARTIFICIELLE (LLM)
-      # =======================================================================
-      - title: 🧠 Intelligence Artificielle (LLM)
-        type: grid
-        cards:
-          - type: grid
-            columns: 2
-            square: false
-            cards:
-              - type: sensor
-                entity: sensor.hermes_cost_today
-                name: Aujourd'hui
-              - type: sensor
-                entity: sensor.hermes_cost_this_month
-                name: Ce Mois
-              - type: sensor
-                entity: sensor.hermes_cost_this_year
-                name: Cette Année
-              - type: sensor
-                entity: sensor.hermes_cost_total
-                name: Cumulé Total
-          - type: statistics-graph
-            title: Consommation journalière LLM (7 jours)
-            entities:
-              - sensor.hermes_cost_total
-            stat_types:
-              - change
-            chart_type: bar
-            period: day
-            days_to_show: 7
+- max_columns: 4
+  path: accueil
+  sections:
+  - cards:
+    - entity: weather.forecast_home
+      name: Clermont-Savès
+      show_forecast: true
+      type: weather-forecast
+    - entities:
+      - entity: sensor.sensor_6_temperature
+        name: Extérieur (Tapo)
+      - entity: sensor.heat_pump_outdoor_temperature
+        name: Extérieur Sonde PAC
+      - entity: sensor.meteo_temperature
+        name: Extérieur Météo
+      - entity: sensor.capteur_temp_hum_salon_temperature
+        name: Salon
+      - entity: sensor.sensor_2_temperature
+        name: Bureau
+      - entity: sensor.temperature_humidity_sensor_temperature
+        name: Ch. Parentale
+      - entity: sensor.temperature_humidity_sensor_temperature_3
+        name: Ch. Blanche
+      - entity: sensor.temperature_humidity_sensor_temperature_2
+        name: Ch. Verte
+      - entity: sensor.temperature_humidity_sensor_temperature_4
+        name: Cave
+      - entity: sensor.heat_pump_indoor_ambient_temp
+        name: Console Daikin (Salon)
+      hours_to_show: 168
+      title: Comparatif Températures (7 jours)
+      type: history-graph
+    - entities:
+      - entity: sensor.sensor_6_humidite
+        name: Extérieur (Tapo)
+      - entity: sensor.capteur_temp_hum_salon_humidite
+        name: Salon
+      - entity: sensor.sensor_2_humidite
+        name: Bureau
+      - entity: sensor.temperature_humidity_sensor_humidite
+        name: Ch. Parentale
+      - entity: sensor.temperature_humidity_sensor_humidite_3
+        name: Ch. Blanche
+      - entity: sensor.temperature_humidity_sensor_humidite_2
+        name: Ch. Verte
+      - entity: sensor.temperature_humidity_sensor_humidite_4
+        name: Cave
+      hours_to_show: 168
+      title: Comparatif Humidités (7 jours)
+      type: history-graph
+    title: 🌦️ Météo & Comparatifs (7 jours)
+    type: grid
+  - cards:
+    - cards:
+      - color: orange
+        detail: 1
+        entity: sensor.capteur_temp_hum_salon_temperature
+        graph: line
+        name: Salon Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.capteur_temp_hum_salon_humidite
+        graph: line
+        name: Salon Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - cards:
+      - color: orange
+        detail: 1
+        entity: sensor.sensor_2_temperature
+        graph: line
+        name: Bureau Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.sensor_2_humidite
+        graph: line
+        name: Bureau Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - cards:
+      - color: orange
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_temperature
+        graph: line
+        name: Parentale Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_humidite
+        graph: line
+        name: Parentale Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - cards:
+      - color: orange
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_temperature_3
+        graph: line
+        name: Blanche Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_humidite_3
+        graph: line
+        name: Blanche Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - cards:
+      - color: orange
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_temperature_2
+        graph: line
+        name: Verte Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_humidite_2
+        graph: line
+        name: Verte Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - cards:
+      - color: grey
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_temperature_4
+        graph: line
+        name: Cave Température
+        type: sensor
+      - color: blue
+        detail: 1
+        entity: sensor.temperature_humidity_sensor_humidite_4
+        graph: line
+        name: Cave Humidité
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    title: 🌡️ Climat Intérieur (24h)
+    type: grid
+  - cards:
+    - cards:
+      - entity: climate.chauffage_dalle_mesplet
+        name: Thermostat Chaud
+        type: thermostat
+      - entity: climate.rafraichissement_dalle_mesplet
+        name: Thermostat Froid
+        type: thermostat
+      columns: 2
+      square: false
+      title: 🌡️ Régulation d'Ambiance (Virtuelle)
+      type: grid
+    - cards:
+      - color: red
+        entity: climate.chauffage_dalle_mesplet
+        icon: mdi:power
+        name: Allumer Chauffage
+        tap_action:
+          action: toggle
+        type: tile
+      - color: blue
+        entity: climate.rafraichissement_dalle_mesplet
+        icon: mdi:power
+        name: Allumer Rafraîchissement
+        tap_action:
+          action: toggle
+        type: tile
+      columns: 2
+      square: false
+      title: 🕹️ Actions & Régulation
+      type: grid
+    - cards:
+      - color: light-blue
+        entity: sensor.heat_pump_operation_mode
+        icon: mdi:heat-pump
+        name: Mode Actuel
+        type: tile
+      - color: amber
+        entity: select.buanderie_daikin_altherma_espaltherma_smart_grid
+        icon: mdi:solar-power
+        name: Mode SG Ready
+        type: tile
+      - color: indigo
+        entity: sensor.heat_pump_3_way_valve
+        icon: mdi:valve
+        name: Vanne 3 Voies
+        type: tile
+      - color: green
+        entity: sensor.heat_pump_circulating_pump
+        icon: mdi:pump
+        name: Pompe de Circulation
+        type: tile
+      - color: deep-orange
+        entity: sensor.heat_pump_defrost_operation
+        icon: mdi:snowflake-melt
+        name: Dégivrage
+        type: tile
+      - color: orange
+        entity: sensor.heat_pump_dhw_status
+        icon: mdi:water-boiler-alert
+        name: Statut ECS
+        type: tile
+      columns: 2
+      square: false
+      title: 📊 Modes & États PAC
+      type: grid
+    - cards:
+      - color: red
+        detail: 1
+        entity: sensor.heat_pump_total_power
+        graph: line
+        name: Puissance Élec.
+        type: sensor
+      - color: green
+        detail: 1
+        entity: sensor.heat_pump_cop
+        graph: line
+        name: COP instantané
+        type: sensor
+      - color: orange
+        detail: 1
+        entity: sensor.heat_pump_dhw_tank_temperature
+        graph: line
+        name: Temp. Ballon ECS
+        type: sensor
+      columns: 3
+      square: false
+      title: ⚡ Rendement & Stockage Thermique (24h)
+      type: grid
+    - entities:
+      - entity: sensor.heat_pump_water_leaving_temperature_after_buh
+        name: Eau Départ (Sortie)
+      - entity: sensor.heat_pump_water_inlet_temperature
+        name: Eau Retour (Entrée)
+      - entity: sensor.heat_pump_lw_setpoint
+        name: Consigne (LW)
+      hours_to_show: 24
+      title: 🚰 Boucle Thermique Départ/Retour (24h)
+      type: history-graph
+    - entities:
+      - entity: sensor.heat_pump_indoor_ambient_temp
+        icon: mdi:home-thermometer
+        name: Temp. Ambiante (Console)
+      - entity: sensor.heat_pump_compressor_frequency
+        icon: mdi:sine-wave
+        name: Fréquence Compresseur
+      - entity: sensor.heat_pump_outdoor_fan_speed
+        icon: mdi:fan-chevron-up
+        name: Vitesse Ventilateur Extérieur
+      - entity: sensor.heat_pump_circulating_pump_speed
+        icon: mdi:pump
+        name: Vitesse Pompe de Circulation
+      - entity: sensor.heat_pump_compressor_discharge_temp
+        icon: mdi:thermometer-high
+        name: Temp. Refoulement Compresseur
+      - entity: sensor.heat_pump_flow_rate
+        icon: mdi:waves
+        name: Débit Hydraulique
+      - entity: sensor.heat_pump_lw_setpoint
+        icon: mdi:thermometer-water
+        name: Consigne d'Eau Sortie (LW)
+      - entity: sensor.heat_pump_dhw_setpoint
+        icon: mdi:water-boiler
+        name: Consigne Ballon ECS
+      - entity: sensor.heat_pump_energy_daily
+        icon: mdi:calendar-today
+        name: Consommation Jour (PAC)
+      - entity: sensor.heat_pump_energy_monthly
+        icon: mdi:calendar-month
+        name: Consommation Mois (PAC)
+      - entity: sensor.heat_pump_energy
+        icon: mdi:counter
+        name: Index Énergie Total
+      'show_header_toggle: false': false
+      title: ⚙️ Indicateurs Physiques & Mesures
+      type: entities
+    title: ❄️ PAC & Énergie (Daikin)
+    type: grid
+  - cards:
+    - entities:
+      - entity: binary_sensor.konyks_senso_charge_2_porte
+        icon: mdi:garage
+        name: Position de la Porte
+      - action_name: Actionner
+        icon: mdi:remote
+        name: Commande de la Porte
+        tap_action:
+          action: call-service
+          service: switch.turn_on
+          target:
+            entity_id: switch.relai_garage_switch_1
+        type: button
+      - entity: switch.relai_garage_switch_2
+        icon: mdi:lightbulb
+        name: Éclairage du Garage
+      - entity: sensor.konyks_senso_charge_2_batterie
+        icon: mdi:battery-60
+        name: Niveau de Batterie Capteur
+      show_header_toggle: false
+      title: 🚗 Contrôle & État Garage
+      type: entities
+    - cards:
+      - color: yellow
+        entity: switch.aubess_smart_switch_1_gang_6_switch_1
+        icon: mdi:outdoor-lamp
+        name: Extérieur Maison
+        tap_action:
+          action: toggle
+        type: tile
+      - color: yellow
+        entity: switch.lumiere_grange_switch_1
+        icon: mdi:lightbulb
+        name: Lumière Grange
+        tap_action:
+          action: toggle
+        type: tile
+      - color: yellow
+        entity: switch.grange_lumiere_bar_switch_1
+        icon: mdi:led-strip-variant
+        name: Bar Grange
+        tap_action:
+          action: toggle
+        type: tile
+      - color: yellow
+        entity: switch.prise_commandee_grange_switch_1
+        icon: mdi:power-socket-eu
+        name: Prise Grange
+        tap_action:
+          action: toggle
+        type: tile
+      columns: 2
+      square: false
+      title: ⚡ Actions Grange & Extérieur
+      type: grid
+    title: 🚗 Garage, Grange & Extérieurs
+    type: grid
+  - cards:
+    - cards:
+      - color: cyan
+        entity: fan.ventilateur_bureau
+        features:
+        - type: fan-speed
+        icon: mdi:fan
+        name: Ventilo Bureau
+        tap_action:
+          action: toggle
+        type: tile
+      - color: yellow
+        entity: light.ventilateur_bureau
+        icon: mdi:lightbulb-outline
+        name: Lumière Ventilo
+        tap_action:
+          action: toggle
+        type: tile
+      columns: 2
+      square: false
+      title: ⚡ Actions Bureau (Taps directs configurés)
+      type: grid
+    title: 🏠 Bureau & Équipements Intérieurs
+    type: grid
+  - cards:
+    - color: deep-purple
+      entity: vacuum.roborock_qrevo_s
+      features:
+      - commands:
+        - start_pause
+        - clean_spot
+        - return_home
+        type: vacuum-commands
+      icon: mdi:robot-vacuum
+      name: Roborock Qrevo S
+      type: tile
+    - entities:
+      - entity: sensor.roborock_qrevo_s_etat
+        name: État actuel
+      - entity: sensor.roborock_qrevo_s_batterie
+        icon: mdi:battery
+        name: Batterie Robot
+      - entity: sensor.roborock_qrevo_s_current_room
+        icon: mdi:room-service
+        name: Pièce actuelle
+      - entity: sensor.roborock_qrevo_s_surface_de_nettoyage
+        icon: mdi:texture-box
+        name: Surface nettoyée
+      - entity: sensor.roborock_qrevo_s_duree_de_nettoyage
+        icon: mdi:timer-outline
+        name: Durée de nettoyage
+      show_header_toggle: false
+      title: État & Infos de Nettoyage
+      type: entities
+    - entity: image.roborock_qrevo_s_mesplet
+      name: Carte Mesplet
+      show_name: false
+      show_state: false
+      type: picture-entity
+    title: 🧹 Aspirateur Robot
+    type: grid
+  - cards:
+    - color: red
+      entity: switch.harman_kardon_hk970_ampli_salon_power
+      icon: mdi:amplifier
+      name: Ampli Harman Kardon HK970
+      tap_action:
+        action: toggle
+      type: tile
+    - cards:
+      - entity: button.harman_kardon_hk970_ampli_volume
+        icon: mdi:volume-plus
+        name: Volume +
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.harman_kardon_hk970_ampli_volume
+        type: tile
+      - entity: button.harman_kardon_hk970_ampli_volume_2
+        icon: mdi:volume-minus
+        name: Volume -
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.harman_kardon_hk970_ampli_volume_2
+        type: tile
+      - entity: button.harman_kardon_hk970_ampli_source_tv
+        icon: mdi:television
+        name: Source TV
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.harman_kardon_hk970_ampli_source_tv
+        type: tile
+      columns: 3
+      square: false
+      type: grid
+    - entity: media_player.wiim_ultra_31ba_2
+      name: WiiM Ultra Salon
+      type: media-control
+    - entity: media_player.tv_2
+      name: Télévision Salon
+      type: media-control
+    - entity: media_player.bouygtel4k_2
+      name: Décodeur Bbox
+      type: media-control
+    title: 🎵 Multimédia Salon
+    type: grid
+  - cards:
+    - cards:
+      - color: green
+        entity: sensor.bbox_etat_du_reseau_etendu_wan
+        icon: mdi:router-wireless
+        name: État Réseau Bbox
+        type: tile
+      - color: blue
+        entity: sensor.bbox_ip_externe
+        icon: mdi:ip-network
+        name: IP Publique
+        type: tile
+      columns: 2
+      square: false
+      type: grid
+    - entities:
+      - entity: device_tracker.xmgbook
+        icon: mdi:laptop
+        name: Ordinateur Charles
+      - entity: device_tracker.cph2709_oneplus_nord5
+        icon: mdi:cellphone
+        name: Téléphone Charles
+      - entity: device_tracker.dn2103_elvire
+        icon: mdi:cellphone
+        name: Téléphone Elvire
+      show_header_toggle: false
+      title: 💻 Appareils Actifs (Wi-Fi / LAN)
+      type: entities
+    - cards:
+      - color: purple
+        detail: 1
+        entity: sensor.bbox_vitesse_de_telechargement
+        graph: line
+        name: Débit Descendant
+        type: sensor
+      - color: deep-orange
+        detail: 1
+        entity: sensor.bbox_vitesse_de_telechargement_montant
+        graph: line
+        name: Débit Montant
+        type: sensor
+      columns: 2
+      square: false
+      type: grid
+    - entities:
+      - entity: sensor.bbox_donnees_recues
+        icon: mdi:download-network
+        name: Total Reçu (octets)
+      - entity: sensor.bbox_donnees_envoyees
+        icon: mdi:upload-network
+        name: Total Envoyé (octets)
+      show_header_toggle: false
+      title: Consommation Globale Bbox
+      type: entities
+    title: 🌐 Internet & Réseau
+    type: grid
+  - cards:
+    - cards:
+      - color: amber
+        entity: sensor.hermes_cost_today
+        icon: mdi:currency-usd
+        name: Aujourd'hui
+        type: tile
+      - color: blue
+        entity: sensor.hermes_cost_this_month
+        icon: mdi:calendar-month
+        name: Ce Mois
+        type: tile
+      - color: purple
+        entity: sensor.hermes_cost_total
+        icon: mdi:finance
+        name: Total Cumulé
+        type: tile
+      columns: 3
+      square: false
+      type: grid
+    - chart_type: bar
+      days_to_show: 7
+      entities:
+      - sensor.hermes_cost_total
+      period: day
+      stat_types:
+      - change
+      title: Historique des dépenses LLM (7 jours)
+      type: statistics-graph
+    title: 🧠 Intelligence Artificielle (LLM)
+    type: grid
+  title: Accueil
+  type: sections

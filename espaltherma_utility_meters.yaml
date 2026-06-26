@@ -7,36 +7,24 @@
 
 # Daily energy consumption meter
 heat_pump_energy_daily:
-  source: sensor.heat_pump_total_power
+  source: sensor.heat_pump_energy
   cycle: daily
   name: "Heat Pump Energy Daily"
-  unit_of_measurement: kWh
-  delta_values: true
-  net_consumption: false
 
 # Monthly energy consumption meter  
 heat_pump_energy_monthly:
-  source: sensor.heat_pump_total_power
+  source: sensor.heat_pump_energy
   cycle: monthly
   name: "Heat Pump Energy Monthly"
-  unit_of_measurement: kWh
-  delta_values: true
-  net_consumption: false
 
 # Weekly energy consumption meter (bonus)
 heat_pump_energy_weekly:
-  source: sensor.heat_pump_total_power
+  source: sensor.heat_pump_energy
   cycle: weekly
   name: "Heat Pump Energy Weekly"
-  unit_of_measurement: kWh
-  delta_values: true
-  net_consumption: false
 
 # Yearly energy consumption meter (bonus)
 heat_pump_energy_yearly:
-  source: sensor.heat_pump_total_power
+  source: sensor.heat_pump_energy
   cycle: yearly
   name: "Heat Pump Energy Yearly"
-  unit_of_measurement: kWh
-  delta_values: true
-  net_consumption: false

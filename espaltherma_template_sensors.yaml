@@ -42,7 +42,7 @@
       state_class: "measurement"
       state: >
         {% set flow = states('sensor.heat_pump_flow_rate') | float(0) %}
-        {% set delta_t = states('sensor.heat_pump_delta_t') | float(0) %}
+        {% set delta_t = states('sensor.heat_pump_delta_t') | float(0) | abs %}
         {% set thermal_power = (flow * delta_t * 4.18 / 60) %}
         {{ thermal_power | round(1) if thermal_power > 0 else 0 }}
       availability: >
