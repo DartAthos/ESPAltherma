@@ -55,6 +55,21 @@ views:
   - cards:
     - cards:
       - color: orange
+        entity: sensor.sensor_6_temperature
+        icon: mdi:thermometer
+        name: Extérieur (Tapo)
+        type: tile
+      - color: light-blue
+        entity: sensor.heat_pump_outdoor_temperature
+        icon: mdi:heat-pump-outline
+        name: Extérieur (PAC)
+        type: tile
+      columns: 2
+      square: false
+      title: 🌤️ Températures Extérieures
+      type: grid
+    - cards:
+      - color: orange
         detail: 1
         entity: sensor.capteur_temp_hum_salon_temperature
         graph: line
@@ -149,7 +164,7 @@ views:
       columns: 2
       square: false
       type: grid
-    title: 🌡️ Climat Intérieur (24h)
+    title: 🌡️ Climat
     type: grid
   - cards:
     - cards:
@@ -358,14 +373,7 @@ views:
         tap_action:
           action: toggle
         type: tile
-      - color: yellow
-        entity: light.ceiling_fan_light_v2_2
-        icon: mdi:ceiling-fan-light
-        name: Lumière Séjour
-        tap_action:
-          action: toggle
-        type: tile
-      columns: 2
+      columns: 1
       square: false
       title: ⚡ Actions Séjour (Ventilateur)
       type: grid
