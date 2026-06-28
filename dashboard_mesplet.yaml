@@ -55,18 +55,20 @@ views:
   - cards:
     - cards:
       - color: orange
+        detail: 1
         entity: sensor.sensor_6_temperature
-        icon: mdi:thermometer
+        graph: line
         name: Extérieur (Tapo)
-        type: tile
-      - color: light-blue
+        type: sensor
+      - color: orange
+        detail: 1
         entity: sensor.heat_pump_outdoor_temperature
-        icon: mdi:heat-pump-outline
+        graph: line
         name: Extérieur (PAC)
-        type: tile
+        type: sensor
       columns: 2
       square: false
-      title: 🌤️ Températures Extérieures
+      title: 🌤️ Températures Extérieures (24h)
       type: grid
     - cards:
       - color: orange
