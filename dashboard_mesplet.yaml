@@ -350,6 +350,27 @@ views:
   - cards:
     - cards:
       - color: cyan
+        entity: fan.ceiling_fan_light_v2_2
+        features:
+        - type: fan-speed
+        icon: mdi:fan
+        name: Ventilo Séjour
+        tap_action:
+          action: toggle
+        type: tile
+      - color: yellow
+        entity: light.ceiling_fan_light_v2_2
+        icon: mdi:ceiling-fan-light
+        name: Lumière Séjour
+        tap_action:
+          action: toggle
+        type: tile
+      columns: 2
+      square: false
+      title: ⚡ Actions Séjour (Ventilateur)
+      type: grid
+    - cards:
+      - color: cyan
         entity: fan.ventilateur_bureau
         features:
         - type: fan-speed
@@ -369,7 +390,7 @@ views:
       square: false
       title: ⚡ Actions Bureau (Taps directs configurés)
       type: grid
-    title: 🏠 Bureau & Équipements Intérieurs
+    title: 🏠 Équipements Intérieurs & Ventilateurs
     type: grid
   - cards:
     - color: deep-purple
