@@ -188,6 +188,11 @@ views:
         icon: mdi:solar-power
         name: Mode SG Ready
         type: tile
+      - color: green
+        entity: sensor.heat_pump_thermostat_status
+        icon: mdi:checkbox-marked-circle-outline
+        name: Retour Consigne Thermostat
+        type: tile
       - color: indigo
         entity: sensor.heat_pump_3_way_valve
         icon: mdi:valve
