@@ -191,7 +191,7 @@ views:
       - color: green
         entity: sensor.heat_pump_thermostat_status
         icon: mdi:checkbox-marked-circle-outline
-        name: Demande Reçue (Daikin)
+        name: Statut Thermostat
         type: tile
       - color: indigo
         entity: sensor.heat_pump_3_way_valve
