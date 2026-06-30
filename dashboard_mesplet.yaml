@@ -182,7 +182,7 @@ views:
       type: grid
     - cards:
       - color: red
-        entity: switch.espaltherma_heat
+        entity: switch.altherma
         icon: mdi:power
         name: Allumer Chauffage
         tap_action:
