@@ -170,34 +170,12 @@ views:
     type: grid
   - cards:
     - cards:
-      - entity: climate.chauffage_dalle_mesplet
-        name: Thermostat Chaud
+      - entity: climate.climatisation_dalle_mesplet
+        name: Thermostat Dalle Réversible
         type: thermostat
-      - entity: climate.rafraichissement_dalle_mesplet
-        name: Thermostat Froid
-        type: thermostat
-      columns: 2
+      columns: 1
       square: false
-      title: 🌡️ Régulation d'Ambiance (Virtuelle)
-      type: grid
-    - cards:
-      - color: red
-        entity: switch.altherma
-        icon: mdi:power
-        name: Allumer Chauffage
-        tap_action:
-          action: toggle
-        type: tile
-      - color: blue
-        entity: switch.espaltherma_cool
-        icon: mdi:power
-        name: Allumer Rafraîchissement
-        tap_action:
-          action: toggle
-        type: tile
-      columns: 2
-      square: false
-      title: 🕹️ Actions & Régulation
+      title: 🌡️ Régulation d'Ambiance
       type: grid
     - cards:
       - color: light-blue
@@ -301,7 +279,7 @@ views:
       - entity: sensor.heat_pump_energy
         icon: mdi:counter
         name: Index Énergie Total
-      'show_header_toggle: false': false
+      show_header_toggle: false
       title: ⚙️ Indicateurs Physiques & Mesures
       type: entities
     title: ❄️ PAC & Énergie (Daikin)
