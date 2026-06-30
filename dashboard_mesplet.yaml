@@ -182,14 +182,14 @@ views:
       type: grid
     - cards:
       - color: red
-        entity: climate.chauffage_dalle_mesplet
+        entity: switch.espaltherma_heat
         icon: mdi:power
         name: Allumer Chauffage
         tap_action:
           action: toggle
         type: tile
       - color: blue
-        entity: climate.rafraichissement_dalle_mesplet
+        entity: switch.espaltherma_cool
         icon: mdi:power
         name: Allumer Rafraîchissement
         tap_action:
