@@ -218,6 +218,31 @@ views:
       title: 📊 Modes & États PAC
       type: grid
     - cards:
+      - color: teal
+        entity: input_boolean.etat_bypass_vmc
+        icon: mdi:air-filter
+        name: Bypass (Free-cooling)
+        tap_action:
+          action: perform-action
+          perform_action: switch.turn_on
+          target:
+            entity_id: switch.vmc_clic_bypass
+        type: tile
+      - color: blue
+        entity: input_boolean.etat_boost_vmc
+        icon: mdi:fan-speed-3
+        name: VMC Vitesse Rapide
+        tap_action:
+          action: perform-action
+          perform_action: switch.turn_on
+          target:
+            entity_id: switch.vmc_clic_boost
+        type: tile
+      columns: 2
+      square: false
+      title: 🌬️ Contrôle Ventilation (VMC)
+      type: grid
+    - cards:
       - color: red
         detail: 1
         entity: sensor.heat_pump_total_power
