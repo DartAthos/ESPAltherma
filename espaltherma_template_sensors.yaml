@@ -11,9 +11,9 @@
 - sensor:
     - name: "Heat Pump Total Power"
       unique_id: "hp_total_power"
-      unit_of_measurement: "W"
       device_class: "power"
       state_class: "measurement"
+      unit_of_measurement: "W"
       state: >
         {% set voltage = 230 %}
         {% set power_factor = 0.9 %}
@@ -24,9 +24,9 @@
 
     - name: "Heat Pump Delta T"
       unique_id: "hp_delta_t"
-      unit_of_measurement: "°C"
       device_class: "temperature"
       state_class: "measurement"
+      unit_of_measurement: "°C"
       state: >
         {% set leaving = states('sensor.heat_pump_water_leaving_temperature_after_buh') | float %}
         {% set inlet = states('sensor.heat_pump_water_inlet_temperature') | float %}
@@ -37,7 +37,7 @@
 
     - name: "Heat Pump Thermal Power"
       unique_id: "hp_thermal_power"
-      unit_of_measurement: "kW"
+      unit_of_measurement: "W"
       device_class: "power"
       state_class: "measurement"
       state: >
@@ -80,38 +80,32 @@
         {{ states('sensor.heat_pump_dhw_tank_temperature') not in ['unknown', 'unavailable'] and
            states('sensor.heat_pump_dhw_setpoint') not in ['unknown', 'unavailable'] }}
 
-    - name: "Heat Pump Energy Today"
-      unique_id: "hp_energy_today"
-      unit_of_measurement: "kWh"
-      device_class: "energy"
-      state_class: "total_increasing"
-      state: >-
-        {% set power_w = states('sensor.heat_pump_total_power') | float(0) %}
-        {% set power_kw = power_w / 1000 %}
-        {% set last_reset = now().replace(hour=0, minute=0, second=0, microsecond=0) %}
-        {% set current_time = now() %}
-        {% set hours_since_reset = ((current_time - last_reset).total_seconds() / 3600) %}
-        {% if power_kw > 0 and hours_since_reset > 0 %}
-          {{ (power_kw * hours_since_reset) | round(3) }}
-        {% else %}
-          0
-        {% endif %}
-      availability: "{{ states('sensor.heat_pump_total_power') not in ['unknown', 'unavailable'] }}"
+# =================================================================
+# TEMPLATE SWITCHES FOR VMC CONTROL
+# =================================================================
+- switch:
+    - name: "Bypass VMC"
+      unique_id: bypass_vmc_template
+      icon: "mdi:air-filter"
+      state: "{{ is_state('input_boolean.etat_bypass_vmc', 'on') }}"
+      turn_on:
+        service: switch.turn_on
+        target:
+          entity_id: switch.vmc_clic_bypass
+      turn_off:
+        service: switch.turn_on
+        target:
+          entity_id: switch.vmc_clic_bypass
 
-    - name: "Heat Pump Energy This Month"
-      unique_id: "hp_energy_month"
-      unit_of_measurement: "kWh"
-      device_class: "energy"
-      state_class: "total_increasing"
-      state: >-
-        {% set power_w = states('sensor.heat_pump_total_power') | float(0) %}
-        {% set power_kw = power_w / 1000 %}
-        {% set first_of_month = now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) %}
-        {% set current_time = now() %}
-        {% set hours_since_reset = ((current_time - first_of_month).total_seconds() / 3600) %}
-        {% if power_kw > 0 and hours_since_reset > 0 %}
-          {{ (power_kw * hours_since_reset) | round(3) }}
-        {% else %}
-          0
-        {% endif %}
-      availability: "{{ states('sensor.heat_pump_total_power') not in ['unknown', 'unavailable'] }}"
+    - name: "VMC Vitesse Rapide"
+      unique_id: boost_vmc_template
+      icon: "mdi:fan-speed-3"
+      state: "{{ is_state('input_boolean.etat_boost_vmc', 'on') }}"
+      turn_on:
+        service: switch.turn_on
+        target:
+          entity_id: switch.vmc_clic_boost
+      turn_off:
+        service: switch.turn_on
+        target:
+          entity_id: switch.vmc_clic_boost

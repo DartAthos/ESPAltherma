@@ -41,6 +41,12 @@ void sendValues()
 #endif
   snprintf(jsonbuff + strlen(jsonbuff),MAX_MSG_SIZE - strlen(jsonbuff) , "\"%s\":\"%ddBm\",", "WifiRSSI", WiFi.RSSI());
   snprintf(jsonbuff + strlen(jsonbuff),MAX_MSG_SIZE - strlen(jsonbuff) , "\"%s\":\"%d\",", "FreeMem", ESP.getFreeHeap());
+#ifdef PIN_THERM
+  snprintf(jsonbuff + strlen(jsonbuff),MAX_MSG_SIZE - strlen(jsonbuff) , "\"%s\":\"%d\",", "ThermGpioState", digitalRead(PIN_THERM) == PIN_THERM_ACTIVE_STATE ? 1 : 0);
+#endif
+#ifdef PIN_COOL
+  snprintf(jsonbuff + strlen(jsonbuff),MAX_MSG_SIZE - strlen(jsonbuff) , "\"%s\":\"%d\",", "CoolGpioState", digitalRead(PIN_COOL) == PIN_COOL_ACTIVE_STATE ? 1 : 0);
+#endif
   jsonbuff[strlen(jsonbuff) - 1] = '}';
 #ifdef JSONTABLE
   strcat(jsonbuff,"]");
@@ -85,10 +91,12 @@ void reconnectMqtt()
       Serial.println("connected!");
       client.publish("homeassistant/sensor/espAltherma/config", "{\"name\":\"AlthermaSensors\",\"stat_t\":\"~/LWT\",\"avty_t\":\"~/LWT\",\"pl_avail\":\"Online\",\"pl_not_avail\":\"Offline\",\"uniq_id\":\"espaltherma\",\"device\":{\"identifiers\":[\"ESPAltherma\"]}, \"~\":\"espaltherma\",\"json_attr_t\":\"~/ATTR\"}", true);
       client.publish(MQTT_lwt, "Online", true);
-      client.publish("homeassistant/switch/espAltherma/config", "{\"name\":\"Altherma\",\"cmd_t\":\"~/POWER\",\"stat_t\":\"~/STATE\",\"pl_off\":\"OFF\",\"pl_on\":\"ON\",\"~\":\"espaltherma\"}", true);
+      client.publish("homeassistant/switch/espAltherma/config", "{\"name\":\"Heat Pump Thermostat (Chaud)\",\"cmd_t\":\"~/POWER\",\"stat_t\":\"~/STATE\",\"pl_off\":\"OFF\",\"pl_on\":\"ON\",\"~\":\"espaltherma\",\"uniq_id\":\"espaltherma_heat\",\"icon\":\"mdi:heating-coil\"}", true);
 
       // Subscribe
       client.subscribe("espaltherma/POWER");
+      // Publish the REAL GPIO state (fix: hardcoded OFF could desync from actual relay; EEPROM may have restored ON)
+      client.publish("espaltherma/STATE", (digitalRead(PIN_THERM) == PIN_THERM_ACTIVE_STATE) ? "ON" : "OFF", true);
 #ifdef PIN_SG1
       // Smart Grid
       client.publish("homeassistant/select/espAltherma/sg/config", "{\"availability\":[{\"topic\":\"espaltherma/LWT\",\"payload_available\":\"Online\",\"payload_not_available\":\"Offline\"}],\"availability_mode\":\"all\",\"unique_id\":\"espaltherma_sg\",\"device\":{\"identifiers\":[\"ESPAltherma\"],\"manufacturer\":\"ESPAltherma\",\"model\":\"M5StickC PLUS ESP32-PICO\",\"name\":\"ESPAltherma\"},\"icon\":\"mdi:solar-power\",\"name\":\"EspAltherma Smart Grid\",\"command_topic\":\"espaltherma/sg/set\",\"command_template\":\"{% if value == 'Free Running' %} 0 {% elif value == 'Forced Off' %} 1 {% elif value == 'Recommended On' %} 2 {% elif value == 'Forced On' %} 3 {% else %} 0 {% endif %}\",\"options\":[\"Free Running\",\"Forced Off\",\"Recommended On\",\"Forced On\"],\"state_topic\":\"espaltherma/sg/state\",\"value_template\":\"{% set mapper = { '0':'Free Running', '1':'Forced Off', '2':'Recommended On', '3':'Forced On' } %} {% set word = mapper[value] %} {{ word }}\"}", true);
@@ -100,7 +108,8 @@ void reconnectMqtt()
       // Cooling Switch
       client.publish("homeassistant/switch/espAlthermaCool/config", "{\"name\":\"Altherma Cool\",\"cmd_t\":\"~/COOLING\",\"stat_t\":\"~/COOL_STATE\",\"pl_off\":\"OFF\",\"pl_on\":\"ON\",\"~\":\"espaltherma\",\"uniq_id\":\"espaltherma_cool\"}", true);
       client.subscribe("espaltherma/COOLING");
-      client.publish("espaltherma/COOL_STATE", "OFF", true);
+      // Publish the REAL GPIO state (fix: hardcoded OFF could desync from actual relay)
+      client.publish("espaltherma/COOL_STATE", (digitalRead(PIN_COOL) == PIN_COOL_ACTIVE_STATE) ? "ON" : "OFF", true);
 #endif
 
 #ifdef SAFETY_RELAY_PIN
