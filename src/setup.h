@@ -13,7 +13,7 @@
 #define TX_PIN 17 // Pin connected to the RX pin of X10A
 #endif
 
-#define PIN_THERM 0                 // Pin connected to the thermostat relay (normally open)
+#define PIN_THERM 2                 // Pin connected to the thermostat relay (normally open) (GPIO 2)
 #define PIN_THERM_ACTIVE_STATE HIGH // State to trigger the thermostat relay
 
 #define PIN_COOL 4                 // Pin connected to the cooling thermostat relay (normally open) (GPIO 4)
